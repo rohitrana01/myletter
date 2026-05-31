@@ -1,23 +1,255 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Envelope</title>
+
+<style>
+:root {
+  --flap-bg: #0077cc;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f2f2f2;
+  font-family: Arial, sans-serif;
+}
+
+/* Popup */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-box {
+  background: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,.3);
+}
+
+.popup-box h2 {
+  margin-top: 0;
+}
+
+.popup-box input {
+  width: 90%;
+  padding: 12px;
+  margin: 15px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.popup-box button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background: #0077cc;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.popup-box button:hover {
+  background: #005fa3;
+}
+
+/* Envelope */
+.envelope-container {
+  perspective: 1500px;
+  cursor: pointer;
+}
+
+.envelope {
+  width: 400px;
+  height: 260px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1s ease-in-out;
+}
+
+/* Front */
+.front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  backface-visibility: hidden;
+  z-index: 1;
+}
+
+.front .logo img {
+  width: 100px;
+  margin-bottom: 15px;
+}
+
+.front .details {
+  font-size: 1.5em;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Back */
+.back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  overflow: hidden;
+}
+
+.flap {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--flap-bg);
+  clip-path: polygon(0 0, 100% 0, 50% 50%);
+  transform-origin: top;
+  transition: transform 1s;
+  z-index: 3;
+}
+
+.letter {
+  position: absolute;
+  bottom: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 25px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  transition: bottom 1.5s ease-out, opacity 1s;
+  opacity: 0;
+  z-index: 2;
+  overflow: auto;
+}
+
+.envelope.open .flap {
+  transform: rotateX(-180deg);
+}
+
+.envelope.open .letter {
+  bottom: 0;
+  opacity: 1;
+}
+
+.signature {
+  margin-top: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Name Popup -->
+<div class="popup" id="namePopup">
+  <div class="popup-box">
+    <h2>Enter Your Name</h2>
+    <input type="text" id="nameInput" placeholder="Your Name">
+    <br>
+    <button id="startBtn">Open Letter</button>
+  </div>
+</div>
+
+<div class="envelope-container">
+  <div class="envelope" id="envelope">
+
+    <!-- Front -->
+    <div class="front">
+      <div class="logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="Logo">
+      </div>
+
+      <div class="details">
+        To: <span id="recipientName">Friend</span>
+      </div>
+    </div>
+
+    <!-- Back -->
+    <div class="back">
+
+      <div class="flap"></div>
+
+      <div class="letter">
+        <h2>Dear <span id="letterName">Friend</span>,</h2>
+
+        <p>
+          This special letter was created especially for you.
+        </p>
+
+        <p>
+          Thank you for taking a moment to open this envelope.
+          Wishing you happiness, success, and wonderful memories ahead.
+        </p>
+
+        <div class="signature">
+          <p><strong>With Best Wishes ❤️</strong></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <script>
-  const envelope = document.getElementById("envelope");
-  let clickCount = 0;
+const envelope = document.getElementById("envelope");
+let clickCount = 0;
 
-  function saveName() {
-    const name = document.getElementById("nameInput").value.trim() || "Friend";
+document.getElementById("startBtn").addEventListener("click", function() {
 
-    document.getElementById("recipientName").textContent = name;
-    document.getElementById("letterName").textContent = name;
+  let name = document.getElementById("nameInput").value.trim();
 
-    document.getElementById("namePopup").style.display = "none";
+  if (name === "") {
+    name = "Friend";
   }
 
-  envelope.addEventListener("click", () => {
-    clickCount++;
+  document.getElementById("recipientName").textContent = name;
+  document.getElementById("letterName").textContent = name;
 
-    if (clickCount === 1) {
-      envelope.style.transform = "rotateY(180deg)";
-    } else if (clickCount === 2) {
-      envelope.classList.add("open");
-    }
-  });
+  document.getElementById("namePopup").style.display = "none";
+});
+
+envelope.addEventListener("click", () => {
+  clickCount++;
+
+  if (clickCount === 1) {
+    envelope.style.transform = "rotateY(180deg)";
+  } else if (clickCount === 2) {
+    envelope.classList.add("open");
+  }
+});
 </script>
+
+</body>
+</html>
+```
