@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,10 +67,6 @@ body {
   font-size: 16px;
 }
 
-.popup-box button:hover {
-  background: #005fa3;
-}
-
 /* Envelope */
 .envelope-container {
   perspective: 1500px;
@@ -89,7 +86,9 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: #ffffff;
+  background: url('https://rohitrana01.github.io/myletter/.jpeg');
+  background-size: cover;
+  background-position: center;
   border: 2px solid #ccc;
   border-radius: 20px;
   display: flex;
@@ -101,14 +100,18 @@ body {
 }
 
 .front .logo img {
-  width: 100px;
+  width: 120px;
+  height: auto;
   margin-bottom: 15px;
 }
 
 .front .details {
   font-size: 1.5em;
-  color: #333;
+  color: #000;
   font-weight: bold;
+  background: rgba(255,255,255,0.8);
+  padding: 8px 15px;
+  border-radius: 10px;
 }
 
 /* Back */
@@ -116,7 +119,9 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: #ffffff;
+  background: url('https://rohitrana01.github.io/myletter/.jpeg');
+  background-size: cover;
+  background-position: center;
   border: 2px solid #ccc;
   border-radius: 20px;
   backface-visibility: hidden;
@@ -126,6 +131,8 @@ body {
 
 .flap {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background: var(--flap-bg);
@@ -135,6 +142,7 @@ body {
   z-index: 3;
 }
 
+/* Letter */
 .letter {
   position: absolute;
   bottom: -100%;
@@ -142,17 +150,44 @@ body {
   transform: translateX(-50%);
   width: 100%;
   height: 100%;
-  background: #fff;
-  border: 1px solid #ccc;
-  padding: 25px;
-  box-sizing: border-box;
-  border-radius: 12px;
+  background: url('https://rohitrana01.github.io/myletter/1.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 2;
   transition: bottom 1.5s ease-out, opacity 1s;
   opacity: 0;
-  z-index: 2;
-  overflow: auto;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
+.letter-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.name-section {
+  font-size: 22px;
+  font-weight: bold;
+  color: #000;
+  text-shadow: 1px 1px 4px rgba(255,255,255,0.9);
+}
+
+.wish-section {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+  text-shadow: 1px 1px 4px rgba(255,255,255,0.9);
+  margin-bottom: 5px;
+}
+
+/* Open animation */
 .envelope.open .flap {
   transform: rotateX(-180deg);
 }
@@ -161,22 +196,18 @@ body {
   bottom: 0;
   opacity: 1;
 }
-
-.signature {
-  margin-top: 30px;
-}
 </style>
 </head>
 
 <body>
 
-<!-- Name Popup -->
+<!-- Popup -->
 <div class="popup" id="namePopup">
   <div class="popup-box">
     <h2>Enter Your Name</h2>
     <input type="text" id="nameInput" placeholder="Your Name">
     <br>
-    <button id="startBtn">Open Letter</button>
+    <button id="startBtn">Continue</button>
   </div>
 </div>
 
@@ -196,23 +227,19 @@ body {
 
     <!-- Back -->
     <div class="back">
-
       <div class="flap"></div>
 
       <div class="letter">
-        <h2>Dear <span id="letterName">Friend</span>,</h2>
+        <div class="letter-content">
 
-        <p>
-          This special letter was created especially for you.
-        </p>
+          <div class="name-section">
+            Dear <span id="letterName">Friend</span>,
+          </div>
 
-        <p>
-          Thank you for taking a moment to open this envelope.
-          Wishing you happiness, success, and wonderful memories ahead.
-        </p>
+          <div class="wish-section">
+            ❤️ Best Wishes ❤️
+          </div>
 
-        <div class="signature">
-          <p><strong>With Best Wishes ❤️</strong></p>
         </div>
       </div>
 
@@ -225,7 +252,6 @@ const envelope = document.getElementById("envelope");
 let clickCount = 0;
 
 document.getElementById("startBtn").addEventListener("click", function() {
-
   let name = document.getElementById("nameInput").value.trim();
 
   if (name === "") {
@@ -251,3 +277,4 @@ envelope.addEventListener("click", () => {
 
 </body>
 </html>
+```
