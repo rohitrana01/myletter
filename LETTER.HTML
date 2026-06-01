@@ -3,43 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interactive Envelope</title>
+<title>Interactive Greeting Letter</title>
 
 <style>
-:root {
-  --flap-bg: #0077cc;
-}
-
 body {
   margin: 0;
   height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background: #f2f2f2;
   font-family: Arial, sans-serif;
 }
 
-/* Popup */
-.popup {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
+/* Input bar */
+.top-bar {
+  margin-bottom: 15px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
+  gap: 10px;
 }
 
-.popup-box {
-  background: #fff;
-  padding: 25px;
-  border-radius: 15px;
-  width: 320px;
-  text-align: center;
+.top-bar input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
-/* Envelope */
+.top-bar button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  background: #0077cc;
+  color: white;
+  cursor: pointer;
+}
+
+/* Envelope container */
 .envelope-container {
   perspective: 1500px;
   cursor: pointer;
@@ -50,7 +50,7 @@ body {
   height: 260px;
   position: relative;
   transform-style: preserve-3d;
-  transition: transform 1s ease-in-out;
+  transition: transform 1s ease;
 }
 
 /* Front */
@@ -61,9 +61,9 @@ body {
   background: linear-gradient(135deg, #e0f0ff, #b3d9ff);
   border-radius: 20px;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-weight: bold;
 }
 
 /* Back */
@@ -82,7 +82,7 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: var(--flap-bg);
+  background: #0077cc;
   clip-path: polygon(0 0, 100% 0, 50% 50%);
   transform-origin: top;
   transition: transform 1s;
@@ -94,21 +94,24 @@ body {
   position: absolute;
   inset: 0;
   background: white;
-  z-index: 2;
   opacity: 0;
-  transition: bottom 1s, opacity 1s;
+  transition: 1s;
+  z-index: 2;
+
+  padding: 12px;
+  box-sizing: border-box;
 }
 
-/* Image */
-.letter-image {
+/* Image FIXED */
+.letter img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
-  opacity: 0.9;
+  background: white;
 }
 
-/* Name */
+/* Name text */
 .name-section {
   position: absolute;
   top: 10px;
@@ -116,25 +119,25 @@ body {
   z-index: 5;
   font-size: 22px;
   font-weight: bold;
-  color: #000;
   text-shadow: 1px 1px 4px white;
 }
 
-/* FIXED: Best wishes moved to LEFT bottom */
+/* Best wishes FIXED left */
 .wish-section {
   position: absolute;
   bottom: 10px;
   left: 15px;
-  right: auto;
-  text-align: left;
   z-index: 5;
   font-size: 18px;
   font-weight: bold;
-  color: #000;
   text-shadow: 1px 1px 4px white;
 }
 
-/* Open animation */
+/* Animations */
+.envelope.flip {
+  transform: rotateY(180deg);
+}
+
 .envelope.open .flap {
   transform: rotateX(-180deg);
 }
@@ -142,39 +145,30 @@ body {
 .envelope.open .letter {
   opacity: 1;
 }
-
-/* transform step */
-.envelope.flip {
-  transform: rotateY(180deg);
-}
 </style>
 </head>
 
 <body>
 
-<div class="popup" id="namePopup">
-  <div class="popup-box">
-    <h2>Enter Your Name</h2>
-    <input type="text" id="nameInput" placeholder="Your Name">
-    <br><br>
-    <button id="startBtn">Continue</button>
-  </div>
+<!-- Name input (safe, non-blocking) -->
+<div class="top-bar">
+  <input id="nameInput" placeholder="Enter your name">
+  <button onclick="applyName()">Apply</button>
 </div>
 
+<!-- Envelope -->
 <div class="envelope-container">
   <div class="envelope" id="envelope">
 
     <div class="front">
-      <div class="details">
-        To: <span id="recipientName">Friend</span>
-      </div>
+      To: <span id="toName">Friend</span>
     </div>
 
     <div class="back">
       <div class="flap"></div>
 
       <div class="letter">
-        <img src="https://rohitrana01.github.io/myletter/1.jpeg" class="letter-image">
+        <img src="https://rohitrana01.github.io/myletter/1.jpeg" alt="Letter Image">
 
         <div class="name-section">
           Dear <span id="letterName">Friend</span>,
@@ -191,27 +185,24 @@ body {
 
 <script>
 const envelope = document.getElementById("envelope");
+let clicked = 0;
 
-document.getElementById("startBtn").addEventListener("click", () => {
-  let name = document.getElementById("nameInput").value.trim();
-  if (!name) name = "Friend";
+function applyName() {
+  const name = document.getElementById("nameInput").value.trim();
+  const finalName = name || "Friend";
 
-  document.getElementById("recipientName").textContent = name;
-  document.getElementById("letterName").textContent = name;
-
-  document.getElementById("namePopup").style.display = "none";
-});
-
-let clickCount = 0;
+  document.getElementById("toName").textContent = finalName;
+  document.getElementById("letterName").textContent = finalName;
+}
 
 envelope.addEventListener("click", () => {
-  clickCount++;
+  clicked++;
 
-  if (clickCount === 1) {
+  if (clicked === 1) {
     envelope.classList.add("flip");
   }
 
-  if (clickCount === 2) {
+  if (clicked === 2) {
     envelope.classList.add("open");
   }
 });
