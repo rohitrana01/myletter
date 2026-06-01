@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="An interactive envelope letter experience.">
 <title>Interactive Envelope</title>
 
 <style>
@@ -20,7 +21,6 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* Popup */
 .popup {
   position: fixed;
   top: 0;
@@ -60,7 +60,6 @@ body {
   cursor: pointer;
 }
 
-/* Envelope */
 .envelope-container {
   perspective: 1500px;
   cursor: pointer;
@@ -74,14 +73,12 @@ body {
   transition: transform 1s ease-in-out;
 }
 
-/* Front */
+/* ✅ FIXED: Replaced broken .jpeg URL with a clean gradient */
 .front {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: url('https://rohitrana01.github.io/myletter/.jpeg');
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(135deg, #e0f0ff, #b3d9ff);
   border: 2px solid #ccc;
   border-radius: 20px;
   display: flex;
@@ -106,14 +103,12 @@ body {
   border-radius: 10px;
 }
 
-/* Back */
+/* ✅ FIXED: Replaced broken .jpeg URL with a clean gradient */
 .back {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: url('https://rohitrana01.github.io/myletter/.jpeg');
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(135deg, #e0f0ff, #b3d9ff);
   border: 2px solid #ccc;
   border-radius: 20px;
   backface-visibility: hidden;
@@ -134,7 +129,6 @@ body {
   z-index: 3;
 }
 
-/* Letter */
 .letter {
   position: absolute;
   bottom: -100%;
@@ -150,7 +144,6 @@ body {
   overflow: hidden;
 }
 
-/* Full image without cropping */
 .letter-image {
   position: absolute;
   inset: 0;
@@ -160,7 +153,6 @@ body {
   object-position: center;
 }
 
-/* Name */
 .name-section {
   position: absolute;
   top: 10px;
@@ -172,7 +164,6 @@ body {
   text-shadow: 1px 1px 4px rgba(255,255,255,0.9);
 }
 
-/* Best wishes */
 .wish-section {
   position: absolute;
   bottom: 10px;
@@ -186,7 +177,6 @@ body {
   text-shadow: 1px 1px 4px rgba(255,255,255,0.9);
 }
 
-/* Open animation */
 .envelope.open .flap {
   transform: rotateX(-180deg);
 }
@@ -200,7 +190,6 @@ body {
 
 <body>
 
-<!-- Name Popup -->
 <div class="popup" id="namePopup">
   <div class="popup-box">
     <h2>Enter Your Name</h2>
@@ -213,37 +202,29 @@ body {
 <div class="envelope-container">
   <div class="envelope" id="envelope">
 
-    <!-- Front -->
     <div class="front">
       <div class="logo">
         <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="Logo">
       </div>
-
       <div class="details">
         To: <span id="recipientName">Friend</span>
       </div>
     </div>
 
-    <!-- Back -->
     <div class="back">
       <div class="flap"></div>
-
       <div class="letter">
-
         <img
           src="https://rohitrana01.github.io/myletter/1.jpeg"
           class="letter-image"
           alt="Letter Image"
         >
-
         <div class="name-section">
           Dear <span id="letterName">Friend</span>,
         </div>
-
         <div class="wish-section">
           ❤️ Best Wishes ❤️
         </div>
-
       </div>
     </div>
 
@@ -256,20 +237,14 @@ let clickCount = 0;
 
 document.getElementById("startBtn").addEventListener("click", function() {
   let name = document.getElementById("nameInput").value.trim();
-
-  if (name === "") {
-    name = "Friend";
-  }
-
+  if (name === "") name = "Friend";
   document.getElementById("recipientName").textContent = name;
   document.getElementById("letterName").textContent = name;
-
   document.getElementById("namePopup").style.display = "none";
 });
 
 envelope.addEventListener("click", () => {
   clickCount++;
-
   if (clickCount === 1) {
     envelope.style.transform = "rotateY(180deg)";
   } else if (clickCount === 2) {
